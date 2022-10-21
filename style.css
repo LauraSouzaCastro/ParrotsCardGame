@@ -29,6 +29,14 @@ h1{
     border: 1px solid #99CEA8;
     margin-top: 20px;
     margin-bottom: 20px;
+    transition: all 1s;
+}
+.escondido{
+    width: 0px;
+    height: 0px;
+}
+.virada {
+    transform: rotateY(180deg);
 }
 img{
     width: 100px;
