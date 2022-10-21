@@ -1,16 +1,22 @@
-let numeroDeCartas, cartasViradas = 0, cartaAnterior = "", jogadas = 0, listaCartas;
+let numeroDeCartas, cartasViradas = 0, cartaAnterior = "", jogadas = 0, listaCartas, segundos = 0, cod;
 let arrayImagens = ['imagens/bobrossparrot.gif', 'imagens/explodyparrot.gif', 'imagens/fiestaparrot.gif', 'imagens/metalparrot.gif', 'imagens/revertitparrot.gif', 'imagens/tripletsparrot.gif', 'imagens/unicornparrot.gif'];
 function comparador() { 
 	return Math.random() - 0.5; 
+}
+let tempo = function(){
+    segundos++;
+    document.querySelector(".relogio").innerHTML = segundos;
 }
 function inicializa(){
     numeroDeCartas = prompt("Com quantas cartas você quer jogar? (Número par de 4 à 14)");
     numeroDeCartas = Number(numeroDeCartas);
     while(numeroDeCartas < 4 || numeroDeCartas > 14 || numeroDeCartas%2 !== 0) {
+        alert("Quantidade de cartas inválidas");
         numeroDeCartas = prompt("Com quantas cartas você quer jogar? (Número par de 4 à 14)");
         numeroDeCartas = Number(numeroDeCartas);
     }
     distribuicaoDasCartas();
+    cod = setInterval(tempo, 1000);
 }
 inicializa();
 function distribuicaoDasCartas(){
@@ -49,7 +55,17 @@ let apareceFigura = function(elemento){
     verso.classList.remove("escondido");
 }
 let alerta = function(){
-    alert(`Você ganhou em ${jogadas} jogadas!`);
+    alert(`Você ganhou em ${jogadas} jogadas, no tempo de ${segundos} segundos!`);
+    clearInterval(cod);
+    let reinicia = prompt("Você gostaria de reiniciar a partida? (sim ou não)");
+    while(reinicia !== "sim" && reinicia !== "não"){
+        alert("Resposta inválida");
+        reinicia = prompt("Você gostaria de reiniciar a partida? (sim ou não)");
+    }
+    if(reinicia === "sim"){
+        window.location.reload();
+    }else if(reinicia === "não"){}
+
 }
 function virar(elemento){
     jogadas++;
@@ -58,11 +74,17 @@ function virar(elemento){
     }
     cartasViradas++;
     elemento.classList.add("virada");
+    elemento.removeAttribute("onclick");
     setTimeout(apareceFigura, 300, elemento);
     if(cartasViradas === 2){
         if(elemento.children[1].getAttribute('src') !== cartaAnterior.children[1].getAttribute('src')){
+            elemento.setAttribute('onclick', 'virar(this)');
+            cartaAnterior.setAttribute('onclick', 'virar(this)');
             setTimeout(desvirar, 1000, elemento);
             setTimeout(desvirar, 1000, cartaAnterior);
+        }else if(elemento.children[1].getAttribute('src') === cartaAnterior.children[1].getAttribute('src')){
+            elemento.onclick = '';
+            cartaAnterior.removeAttribute("onclick");
         }
         cartasViradas = 0;
         cartaAnterior = "";
