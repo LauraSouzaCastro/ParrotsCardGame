@@ -1,4 +1,4 @@
-let numeroDeCartas, cartasViradas = 0, cartaAnterior = "";
+let numeroDeCartas, cartasViradas = 0, cartaAnterior = "", jogadas = 0, listaCartas;
 let arrayImagens = ['imagens/bobrossparrot.gif', 'imagens/explodyparrot.gif', 'imagens/fiestaparrot.gif', 'imagens/metalparrot.gif', 'imagens/revertitparrot.gif', 'imagens/tripletsparrot.gif', 'imagens/unicornparrot.gif'];
 function comparador() { 
 	return Math.random() - 0.5; 
@@ -13,7 +13,6 @@ function inicializa(){
     distribuicaoDasCartas();
 }
 inicializa();
-
 function distribuicaoDasCartas(){
     const container = document.querySelector(".container");
     arrayImagens.sort(comparador);
@@ -49,7 +48,11 @@ let apareceFigura = function(elemento){
     frente.classList.add("escondido");
     verso.classList.remove("escondido");
 }
+let alerta = function(){
+    alert(`Você ganhou em ${jogadas} jogadas!`);
+}
 function virar(elemento){
+    jogadas++;
     if(cartaAnterior === ""){
         cartaAnterior = elemento;
     }
@@ -63,5 +66,18 @@ function virar(elemento){
         }
         cartasViradas = 0;
         cartaAnterior = "";
+    }
+    listaCartas = document.querySelectorAll(".container .carta");
+    let conf = 0;
+    for(let i = 0; i < listaCartas.length; i++){
+        if(listaCartas[i].classList.contains("virada")){
+            conf++;
+        }else{
+            conf = 0;
+            break;
+        }
+    }
+    if(conf === listaCartas.length){
+        setTimeout(alerta, 1000);
     }
 }
