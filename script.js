@@ -1,4 +1,4 @@
-let numeroDeCartas;
+let numeroDeCartas, cartasViradas = 0, cartaAnterior = "";
 let arrayImagens = ['imagens/bobrossparrot.gif', 'imagens/explodyparrot.gif', 'imagens/fiestaparrot.gif', 'imagens/metalparrot.gif', 'imagens/revertitparrot.gif', 'imagens/tripletsparrot.gif', 'imagens/unicornparrot.gif'];
 function comparador() { 
 	return Math.random() - 0.5; 
@@ -36,10 +36,32 @@ function distribuicaoDasCartas(){
             </div>`;
     }
 }
-function virar(elemento){
-    elemento.classList.add("virada");
+let desvirar = function(elemento){
+    elemento.classList.remove("virada");
+    let frente = elemento.children[0];
+    let verso = elemento.children[1];
+    frente.classList.remove("escondido");
+    verso.classList.add("escondido");
+}
+let apareceFigura = function(elemento){
     let frente = elemento.children[0];
     let verso = elemento.children[1];
     frente.classList.add("escondido");
     verso.classList.remove("escondido");
-  }
+}
+function virar(elemento){
+    if(cartaAnterior === ""){
+        cartaAnterior = elemento;
+    }
+    cartasViradas++;
+    elemento.classList.add("virada");
+    setTimeout(apareceFigura, 300, elemento);
+    if(cartasViradas === 2){
+        if(elemento.children[1].getAttribute('src') !== cartaAnterior.children[1].getAttribute('src')){
+            setTimeout(desvirar, 1000, elemento);
+            setTimeout(desvirar, 1000, cartaAnterior);
+        }
+        cartasViradas = 0;
+        cartaAnterior = "";
+    }
+}
